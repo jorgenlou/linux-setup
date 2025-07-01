@@ -1,0 +1,26 @@
+# Backup files
+*~
+*.bak
+*.swp
+*.tmp
+
+# Logs
+*.log
+
+# Conda / Python env
+.env/
+__pycache__/
+conda/
+*.pyc
+
+# Editor/IDE
+.vscode/
+.idea/
+.DS_Store
+
+# OS metadata
+Thumbs.db
+desktop.ini
+
+# System-specific
+node_modules/

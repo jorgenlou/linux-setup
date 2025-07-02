@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 load_os_release() {
     if [ -z "$__OS_RELEASE_LOADED" ]; then

@@ -19,6 +19,7 @@ get_os_info() {
         OS_NAME=$ID
         OS_VERSION=$VERSION_ID
         OS_CODENAME=$VERSION_CODENAME
+        export OS_NAME OS_VERSION OS_CODENAME
         echo "🧭 自动检测系统成功，发行版本：$OS_NAME ($OS_VERSION / $OS_CODENAME)"
     else
         echo "⚠️ 无法自动识别系统信息"
@@ -50,6 +51,7 @@ manual_os_name() {
         done
         echo "✅ 手动选择系统：$OS_NAME"
     fi
+    export OS_NAME
 }
 
 manual_os_version() {
@@ -60,6 +62,7 @@ manual_os_version() {
     else
         read -p "版本号检测失败请输入: " OS_VERSION
     fi
+    export OS_VERSION
 }
 
 manual_os_codename() {
@@ -70,4 +73,5 @@ manual_os_codename() {
     else
         read -p "版本代号检测失败请输入: " OS_CODENAME
     fi
+    export OS_CODENAME
 }

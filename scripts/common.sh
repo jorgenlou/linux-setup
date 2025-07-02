@@ -17,7 +17,7 @@ get_os_info() {
         OS_NAME=$ID
         OS_VERSION=$VERSION_ID
         OS_CODENAME=$VERSION_CODENAME
-        echo "🧭 自动检测系统成功：$OS_NAME ($OS_VERSION / $OS_CODENAME)"
+        echo "🧭 自动检测系统成功，发行版本：$OS_NAME ($OS_VERSION / $OS_CODENAME)"
     else
         echo "⚠️ 无法自动识别系统信息"
         manual_os_name
@@ -31,7 +31,7 @@ manual_os_name() {
     load_os_release
     if [ -n "$ID" ]; then
         OS_NAME=$ID
-        echo "🧭 自动检测系统成功：$OS_NAME"
+        echo "🧭 自动检测系统成功，发行版本：$OS_NAME"
     else
         echo "⚠️ 系统类型识别失败，请手动选择您的 Linux 系统类型（输入数字选择或 e 退出）："
         echo "1:Ubuntu 2:Debian 3:CentOS 4:RedHat e:退出"

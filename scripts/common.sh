@@ -13,6 +13,7 @@ load_os_release() {
 }
 
 get_os_info() {
+    echo "🔎 开始检测系统版本信息"
     load_os_release
     if [ -n "$ID" ]; then
         OS_NAME=$ID

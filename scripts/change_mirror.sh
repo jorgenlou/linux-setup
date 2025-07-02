@@ -1,43 +1,27 @@
 #!/bin/bash
+set -e
 
-source ./scripts/common.sh
+source common.sh
 
-codename=$(lsb_release -cs)
-ali="http://mirrors.aliyun.com/ubuntu/"
-tsinghua="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu"
-
-echo -e "change apt source\n0 no change\n1 select ali (default)\n2 select tsinghua"
-read -p "chosen:" option
-
-if [[ -z "$option" || $option -eq 1 ]]
-then
-    option=1
-    url=$ali
-elif [[ $option -eq 2 ]]
-then
-    url=$tsinghua
+if [ -z "$OS_NAME" ]; then
+    echo "获取系统版本信息"
+    get_os_info
 fi
 
-if [[ $option != 0 ]]
-cp /etc/apt/sources.list /etc/apt/sources.list.bak
+case "$OS_NAME" in
+    # ubuntu和debian换源
+    ubuntu|debian) 
+        source ./mirrors/deb_handler.sh
+        change_apt_source
+        ;;
+    # centos和redhat换源
+    centos|redhat)
+        source ./mirrors/repo_handler.sh
+        change_yum_repo
+        ;;
+    *)
+        echo "❌ 当前系统 $OS_NAME 暂不支持自动换源"
+        ;;
+esac
 
-aptSource="deb $url $codename main restricted universe multiverse\n\
-deb-src $url $codename main restricted universe multiverse\n\n\
-deb $url $codename-security main restricted universe multiverse\n\
-deb-src $url $codename-security main restricted universe multiverse\n\n\
-deb $url $codename-updates main restricted universe multiverse\n\
-deb-src $url $codename-updates main restricted universe multiverse\n\n\
-deb $url $codename-proposed main restricted universe multiverse\n\
-deb-src $url $codename-proposed main restricted universe multiverse\n\n"
-then
-  if [[ "$codename" = "bionic" ]] #ubuntu 18
-  then
-    str="deb $url $codename-backports main restricted universe multiverse\n\
-deb-src $url $codename-backports main restricted universe multiverse"
-    echo -e $aptSource$str > /etc/apt/sources.list
-  elif [[ "$codename" = "xenial" ]] #ubuntu 16
-  then
-    echo -e $aptSource > /etc/apt/sources.list
-  fi
-  apt-get update
-fi
+

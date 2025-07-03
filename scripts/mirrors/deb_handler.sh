@@ -15,13 +15,16 @@ select_fastest_mirror(){
     FASTEST_MIRROR="${mirrors[0]}"  # 默认源
     FASTEST_TIME=5000  # 毫秒，初始为一个较大的值
 
-    echo "🌐 开始测速各镜像源响应速度..."
+    echo ""
+    echo "🌐 测速镜像源响应速度..."
 
     for i in "${!mirrors[@]}"; do
         url="${mirrors[$i]}"
         name="${mirror_names[$i]}"
 
-        result=$(curl -s -o /dev/null -w "%{http_code} %{time_total}" --connect-timeout 5 "$url")
+        # 使用 || true 实现局部禁用 set -e，避免curl请求超时导致脚本退出
+        result=$(
+            curl -s -o /dev/null -w "%{http_code} %{time_total}" --connect-timeout 5 "$url" || true)
         read -r code time <<< "$result"
 
         if [[ "$code" == "200" ]]; then
@@ -46,7 +49,6 @@ select_fastest_mirror(){
     echo "按回车跳过并使用默认源"
 
     read -p "你的选择 [1-${#mirror_names[@]}]: " choice
-
     if [[ "$choice" =~ ^[1-${#mirror_names[@]}]$ ]]; then
         USED_MIRROR="${mirrors[$((choice-1))]}"
         echo "📦 使用手动选择镜像源：$USED_MIRROR"
@@ -68,7 +70,8 @@ change_apt_source(){
     echo ""
     echo "🧩 是否添加源码仓库（deb-src）？"
     echo "👉 一般普通软件安装不需要，只有开发系统工具包或需要手动编译系统包时才需要。"
-    read -p "请输入 y/n（默认: n）： " answer
+    echo "⏳ [3秒内输入 y 安装并按回车，添加源码仓库（deb-src）]，否则不添加"
+    read -t 3 -p ">： " answer  || true
     case "$answer" in
         y|Y) WITH_SRC=true;;
         *) WITH_SRC=false;;
@@ -84,6 +87,13 @@ change_apt_source(){
     echo "系统代号: $OS_CODENAME"
     echo "源地址位：$USED_MIRROR"
     echo "添加源码仓库: $WITH_SRC"
+    echo "⏳ [5秒内输入 q 取消]，否则将继续换源:"
+    read -t 5 -p "> " answer
+    case "$answer" in
+        q|Q) echo "❌ 换源操作已停止"; return;;
+    esac
+    echo ""
+    echo "✅ 开始执行换源操作..."
     echo -e "\n🔧 正在写入 /etc/apt/sources.list..."
 
     # 备份旧 sources.list

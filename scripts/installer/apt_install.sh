@@ -9,6 +9,7 @@ yellow() { echo -e "\033[1;33m$1\033[0m"; }
 
 # 初始化
 packages=(
+    "ca-certificates" "curl" "gnupg" "apt-transport-https"
     "git" "vim" "aptitude" "openssh-server" "podman"
     "nvidia-container-toolkit"
 )

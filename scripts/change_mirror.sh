@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-source common.sh
+# 获取当前脚本的绝对路径
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+source "$DIR/common.sh"
 
 if [ -z "$OS_NAME" ]; then
     echo "获取系统版本信息"

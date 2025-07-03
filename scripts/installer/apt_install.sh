@@ -11,10 +11,11 @@ yellow() { echo -e "\033[1;33m$1\033[0m"; }
 packages=(
     "ca-certificates" "curl" "gnupg" "apt-transport-https"
     "git" "vim" "aptitude" "openssh-server" "podman"
-    "nvidia-container-toolkit"
+    "nvidia-container-toolkit" "miniconda"
 )
 declare -A custom_install_scripts=(
     [nvidia-container-toolkit]="install_nvidia_toolkit.sh"
+    [miniconda]="install_miniconda.sh"
 )
 
 install_packages=()
